@@ -1,0 +1,19 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="asif" id="4">
+        <addColumn tableName="data_group">
+            <column name="data_group_type" type="VARCHAR(100)" defaultValue="MutipleItem">
+                <constraints nullable="false"/>
+            </column>
+            <column name="group_value" type="VARCHAR(300)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <setColumnRemarks tableName="data_group" columnName="data_group_type" remarks="The data group type indicate that the master data in the kind of list data_item (nested items) or only single item in the single level. Default value is MutilpleItem"/>
+        <setColumnRemarks tableName="data_group" columnName="group_value" remarks="This field has not null value only when data_group_type is SingleItem"/>
+    </changeSet>
+</databaseChangeLog>

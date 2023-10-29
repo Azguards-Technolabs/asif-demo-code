@@ -1,0 +1,79 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="asif" id="2">
+        <createTable tableName="data_item">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true"
+                             primaryKeyName="data_item_pkey" />
+            </column>
+            <column name="group_id" type="UUID">
+                <constraints nullable="false" foreignKeyName="group_id_data_item_fk" references="data_group(id)" />
+            </column>
+            <column name="key" type="VARCHAR(300)">
+                <constraints nullable="false" />
+            </column>
+            <column name="value" type="VARCHAR(300)">
+                <constraints nullable="false" />
+            </column>
+            <column name="is_default" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="true" />
+            </column>
+            <column name="sort_order" type="INTEGER">
+                <constraints nullable="true" />
+            </column>
+            <column name="raw_data" type="VARCHAR(4000)">
+                <constraints nullable="true" />
+            </column>
+            <column name="is_deleted" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false" />
+            </column>
+            <column name="deleted_at" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="true" />
+            </column>
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="true" />
+            </column>
+            <column name="created_by" type="VARCHAR(100)">
+                <constraints nullable="true" />
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="true" />
+            </column>
+            <column name="updated_by" type="VARCHAR(100)">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+
+        <setTableRemarks tableName="data_item" remarks="To store Enterprise data from the pre-defined spreadsheet" />
+        <setColumnRemarks tableName="data_item" columnName="id" remarks="Primary key of the table. UUID"/>
+        <setColumnRemarks tableName="data_item" columnName="group_id" remarks="Group id which maps from group table to manage the different groups of data which contains in the sheet. Map to group_id in the group table, create column indexing"/>
+        <setColumnRemarks tableName="data_item" columnName="key" remarks="The data item key or code. Set to empty in case no key required, create column indexing"/>
+        <setColumnRemarks tableName="data_item" columnName="value" remarks="The data item value or text. Set to empty in case no value required"/>
+        <setColumnRemarks tableName="data_item" columnName="is_default" remarks="Flag to set value as the default value, default value is false"/>
+        <setColumnRemarks tableName="data_item" columnName="sort_order" remarks="For setting the order of the data based on the business requirement"/>
+        <setColumnRemarks tableName="data_item" columnName="raw_data" remarks="To save the whole enterprise item object in JSON format which does not have direct use in the backend but used in frontend use cases"/>
+        <setColumnRemarks tableName="data_item" columnName="is_deleted" remarks="Check if the data has been deleted or not"/>
+        <setColumnRemarks tableName="data_item" columnName="deleted_at" remarks="Time when data was deleted"/>
+        <setColumnRemarks tableName="data_item" columnName="created_at" remarks="Set to now() in UTC upon create data record"/>
+        <setColumnRemarks tableName="data_item" columnName="created_by" remarks="The user who create this data"/>
+        <setColumnRemarks tableName="data_item" columnName="updated_at" remarks="Set to now() in UTC upon create/update data record"/>
+        <setColumnRemarks tableName="data_item" columnName="updated_by" remarks="The user who update this data"/>
+
+        <createIndex indexName="data_item_group_id_idx" tableName="data_item">
+            <column name="group_id"/>
+        </createIndex>
+        <createIndex indexName="data_item_key_idx" tableName="data_item">
+            <column name="key"/>
+        </createIndex>
+        <createIndex indexName="data_item_is_deleted_idx" tableName="data_item">
+            <column name="is_deleted"/>
+        </createIndex>
+
+        <sql>
+            CREATE UNIQUE INDEX unique_non_deleted_data_item_group_id ON data_item (group_id, key, value) where is_deleted != true;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

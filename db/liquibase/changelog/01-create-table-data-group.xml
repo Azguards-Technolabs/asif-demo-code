@@ -1,0 +1,94 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="asif" id="1">
+        <createTable tableName="data_group">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true"
+                             primaryKeyName="data_group_pkey" />
+            </column>
+            <column name="group_code" type="VARCHAR(100)">
+                <constraints nullable="false" />
+            </column>
+            <column name="group_name" type="VARCHAR(300)">
+                <constraints nullable="true" />
+            </column>
+            <column name="default_language" type="VARCHAR(100)" defaultValue="en-US">
+                <constraints nullable="true" />
+            </column>
+            <column name="include_key" type="BOOLEAN" defaultValue="true">
+                <constraints nullable="true" />
+            </column>
+            <column name="include_value" type="BOOLEAN" defaultValue="true">
+                <constraints nullable="true" />
+            </column>
+            <column name="key_data_type" type="VARCHAR(100)">
+                <constraints nullable="true" />
+            </column>
+            <column name="value_data_type" type="VARCHAR(100)">
+                <constraints nullable="true" />
+            </column>
+            <column name="entity_id" type="VARCHAR(50)" defaultValue="SYSTEM">
+                <constraints nullable="true" />
+            </column>
+            <column name="app_id" type="VARCHAR(50)" defaultValue="SYSTEM">
+                <constraints nullable="true" />
+            </column>
+            <column name="platform_id" type="VARCHAR(50)" defaultValue="SYSTEM">
+                <constraints nullable="true" />
+            </column>
+            <column name="is_deleted" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false" />
+            </column>
+            <column name="deleted_at" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="true" />
+            </column>
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="true" />
+            </column>
+            <column name="created_by" type="VARCHAR(100)">
+                <constraints nullable="true" />
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="true" />
+            </column>
+            <column name="updated_by" type="VARCHAR(100)">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+
+        <setTableRemarks tableName="data_group" remarks="To store data_group related mapping in the database" />
+        <setColumnRemarks tableName="data_group" columnName="id" remarks="Primary key of the table. UUID"/>
+        <setColumnRemarks tableName="data_group" columnName="group_code" remarks="Data group code"/>
+        <setColumnRemarks tableName="data_group" columnName="group_name" remarks="User friendly name which used in the spreadsheet, default value is empty string"/>
+        <setColumnRemarks tableName="data_group" columnName="default_language" remarks="The default language of the enterprise data, default language is 'en-US'"/>
+        <setColumnRemarks tableName="data_group" columnName="include_value" remarks="The indicator setting to identify that the data item need to have a value, default value is true"/>
+        <setColumnRemarks tableName="data_group" columnName="include_key" remarks="The indicator setting to identify that the data item need to have a key, default value is true"/>
+        <setColumnRemarks tableName="data_group" columnName="value_data_type" remarks="The data type of the data item value"/>
+        <setColumnRemarks tableName="data_group" columnName="key_data_type" remarks="The data type of the data item key"/>
+        <setColumnRemarks tableName="data_group" columnName="entity_id" remarks="The entity ID, default value is SYSTEM"/>
+        <setColumnRemarks tableName="data_group" columnName="app_id" remarks="The application ID, default value is SYSTEM"/>
+        <setColumnRemarks tableName="data_group" columnName="platform_id" remarks="The platform ID in which the enterprise data will be used"/>
+        <setColumnRemarks tableName="data_group" columnName="is_deleted" remarks="Check if the data has been deleted or not"/>
+        <setColumnRemarks tableName="data_group" columnName="deleted_at" remarks="Time when data was deleted"/>
+        <setColumnRemarks tableName="data_group" columnName="created_at" remarks="Set to now() in UTC upon create data record"/>
+        <setColumnRemarks tableName="data_group" columnName="created_by" remarks="The user who create this data"/>
+        <setColumnRemarks tableName="data_group" columnName="updated_at" remarks="Set to now() in UTC upon create/update data record"/>
+        <setColumnRemarks tableName="data_group" columnName="updated_by" remarks="The user who update this data"/>
+
+        <createIndex indexName="data_group_is_deleted_idx" tableName="data_group">
+            <column name="is_deleted"/>
+        </createIndex>
+
+        <sql>
+            CREATE UNIQUE INDEX unique_non_deleted_data_group_group_code ON data_group (group_code, entity_id, app_id, platform_id) where is_deleted != true;
+        </sql>
+
+        <sql>
+            CREATE UNIQUE INDEX unique_non_deleted_data_group_group_name ON data_group (group_name, entity_id, app_id, platform_id) where is_deleted != true;
+        </sql>
+
+    </changeSet>
+</databaseChangeLog>

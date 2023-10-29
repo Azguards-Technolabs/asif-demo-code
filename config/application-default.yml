@@ -1,0 +1,96 @@
+server.port: 8080
+spring:
+  application:
+    entity-id: azguards
+    id: "136"
+    name: ${APPLICATION_NAME:enterprise-data-service}
+  mvc:
+    throw-exception-if-no-handler-found: false
+  web:
+    resources:
+      add-mappings: true
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          lob.non_contextual_creation: true
+  main:
+    allow-bean-definition-overriding: true          
+  datasource:
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://localhost:5432/enterprise_data_db
+    driverClassName: org.postgresql.Driver
+  liquibase.change-log: file:db/liquibase/liquibase-changelog.xml
+
+logging:
+  file:
+    path: logs/
+  level:
+    root: INFO
+  accesslog:
+    pattern: '%h %l %u [%t] "%r" %s %b "Referer: %i{Referer}" "X-Forwarded-For: %i{X-Forwarded-For}" "User-Agent: %i{User-Agent}"'
+
+#prometheus
+management:
+  health.redis.enabled: false
+  health.db.enabled: false
+  server:
+    port: 8081
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+jwt:
+  enabled: true
+  header-name: X-JWT-Assertion
+  ignore-check: true
+  default-membership-id: c9e3c400-640b-11ea-bc55-0242ac130003
+  default-membership-role: SuperAdmin
+  providers:
+    - issuer: internal
+      secret: 2N+Pd5jwo/UXksl/EsDncl3Y7H0M7OQ/FzkvZ5o0MuM=
+      jwtUserType: APPLICATION_USER
+      jwtAppType: APPLICATION
+      expiry: 7200
+      verifySecret: true
+      issuerClaim: iss
+      userTypeClaim: http://internal/claims/usertype
+      userIdClaim: http://internal/claims/enduser
+      orgIdClaim: http://internal/claims/identity/organisationId
+      appIdClaim: http://internal/claims/applicationname
+      roleClaim: http://internal/claims/role
+      permissionClaim: http://internal/claims/permissions
+      subscriberClaim: http://internal/claims/subscriber        
+    
+
+pxchange:
+  enabled: true
+  entity-id: 101D
+
+kafka:
+  server: ${KAFKA_BROKERS:localhost:9092}
+    
+cache:
+  enabled: true
+  url: ${REDIS_URL:redis://localhost:6379}
+  password: root
+  port: 6379
+  
+max-page-size: 500
+
+firebase-condition.mapping: "{ 'vi-VN': 'vi-VN'}"
+
+fire-base.creds-file-path: /home/asif/WorkSpace/101D/enterprise-data-service/digial-firebase-adminsdk-o89b3-276c0ffa92.json
+
+settings.files: 'digial-firebase-adminsdk-o89b3-276c0ffa92.json'

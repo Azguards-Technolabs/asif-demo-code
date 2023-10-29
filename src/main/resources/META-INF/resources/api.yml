@@ -1,0 +1,472 @@
+---
+openapi: 3.0.1
+info:
+  title: enterprise-data-service API
+  version: 1.0.0
+  description: Every organisation / enterprise has a set of organisation specific
+    reference data (also known as Enterprise Reference Data) that are used
+    universally across the organisation. In the case of a Bank, the Enterprise
+    Data may include both Data pertaining to the Organisation as well as Data
+    pertaining to the Customers.
+tags:
+  - name: Enterprise Data
+    description: Manage Enterprise Data
+paths:
+  "/data-groups":
+    post:
+      tags:
+        - Enterprise Data
+      summary: Create Enterprise Data
+      operationId: createEnterpriseData
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DataGroup"
+        required: true
+      responses:
+        "200":
+          description: Enterprise data created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataGroupResponse"
+        "400":
+          description: Input data is invalid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Data Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    get:
+      tags:
+        - Enterprise Data
+      summary: Search Enterprise Data
+      operationId: searchEnterpriseData
+      parameters:
+        - name: searchText
+          in: query
+          description: Search Text (Group name)
+          required: false
+          schema:
+            type: string
+          allowEmptyValue: false
+        - name: appId
+          in: query
+          description: Filtering the data groups using app id
+          required: false
+          schema:
+            type: string
+        - name: entityId
+          in: query
+          description: Filtering the data groups using entity id
+          required: false
+          schema:
+            type: string
+        - name: platformId
+          in: query
+          description: Filtering the data groups using platform id
+          required: false
+          schema:
+            type: string
+        - name: dataGroupCodes
+          in: query
+          description: Filtering by the list of the data group codes
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        - name: detailsLevel
+          in: query
+          description: In case value is FULL then we fetch and return the dataItems as
+            well, otherwise no need to send dataItems
+          required: false
+          schema:
+            type: string
+        - name: pageNumber
+          in: query
+          description: Page Number
+          required: false
+          schema:
+            type: integer
+            default: 1
+            format: int64
+        - name: pageSize
+          in: query
+          description: Number of row in one page
+          required: false
+          schema:
+            type: integer
+            default: 10
+            format: int64
+        - name: sort
+          in: query
+          description: Add - before sorting key for descending order, ex -groupCode for
+            descending order and groupCode for ascending order. The available
+            supported sort fields are createdAt, updatedAt, groupCode, groupName
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        "200":
+          description: Retrieve data successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListDataGroupResponse"
+        "400":
+          description: Input data is invalid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Data Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      security:
+        - Bearer: []
+  "/data-groups/{dataGroupId}":
+    get:
+      tags:
+        - Enterprise Data
+      summary: Get Enterprise Data
+      operationId: getEnterpriseData
+      parameters:
+        - name: dataGroupId
+          required: true
+          in: path
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Retrieve data successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataGroupResponse"
+        "400":
+          description: Input data is invalid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Data Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      security:
+        - Bearer: []
+    delete:
+      tags:
+        - Enterprise Data
+      summary: Delete Enterprise Data
+      operationId: deleteEnterpriseData
+      parameters:
+        - name: dataGroupId
+          required: true
+          in: path
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Input data is invalid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Data Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      security:
+        - Bearer: []
+    put:
+        tags:
+          - Enterprise Data
+        summary: Update Enterprise Data
+        operationId: updateEnterpriseData
+        parameters:
+          - name: dataGroupId
+            required: true
+            in: path
+            schema:
+              type: string
+              format: uuid
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataGroup"
+          required: true
+        responses:
+          "200":
+            description: Enterprise data updated successfully
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/DataGroupResponse"
+          "400":
+            description: Input data is invalid
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/ErrorResponse"
+          "401":
+            description: Unauthorized
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/ErrorResponse"
+          "404":
+            description: Data Not Found
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/ErrorResponse"
+          "500":
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/ErrorResponse"
+        security:
+          - Bearer: []
+  "/data-groups/publish/{targetId}":
+    post:
+      tags:
+        - Enterprise Data
+      summary: Publish Enterprise Data
+      operationId: publishEnterpriseData
+      parameters:
+        - name: targetId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ListDataGroupIds"
+        required: true
+      responses:
+        "202":
+          description: Enterprise data published successfully
+        "400":
+          description: Input data is invalid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Data Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+components:
+  schemas:
+    ListDataGroupIds:
+      type: object
+      properties:
+        dataGroupIds:
+          type: array
+          description: List of data group ids
+          items:
+            type: string
+            format: uuid
+    ListDataGroupResponse:
+      type: object
+      properties:
+        paging:
+          description: The paging information.
+          $ref: "#/components/schemas/PagingInformation"
+        data:
+          type: array
+          description: List of data groups.
+          items:
+            $ref: "#/components/schemas/DataGroup"
+    DataGroupResponse:
+      type: object
+      properties:
+        data:
+          $ref: "#/components/schemas/DataGroup"
+    DataGroup:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        groupCode:
+          type: string
+        groupName:
+          type: string
+        defaultLanguage:
+          type: string
+        includeKey:
+          type: boolean
+        includeValue:
+          type: boolean
+        keyDataType:
+          type: string
+        valueDataType:
+          type: string
+        dataGroupType:
+          type: string
+        entityId:
+          type: string
+        appId:
+          type: string
+        platformId:
+          type: string
+        groupValue:
+          type: string
+        isDeleted:
+          type: boolean
+        dataItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/DataItem"
+        multipleLangs:
+          type: array
+          items:
+            $ref: "#/components/schemas/MultipleLang"
+    DataItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        key:
+          type: string
+        value:
+          type: string
+        sortOrder:
+          type: integer
+        isDefault:
+          type: boolean
+        isDeleted:
+          type: boolean
+        multipleLangs:
+          type: array
+          items:
+            $ref: "#/components/schemas/MultipleLang"
+    MultipleLang:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        value:
+          type: string
+        language:
+          type: string
+        isDeleted:
+          type: boolean
+    PagingInformation:
+      type: object
+      properties:
+        totalRecords:
+          type: integer
+          format: int64
+        pageSize:
+          type: integer
+        pageNumber:
+          type: integer
+    ErrorResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResponseStatus"
+    ResponseStatus:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer

@@ -1,0 +1,12 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="asif" id="5">
+        <modifyDataType tableName="data_group" columnName="group_value" newDataType="VARCHAR(500)"/>
+        <modifyDataType tableName="data_group" columnName="group_name" newDataType="VARCHAR(500)"/>
+        <modifyDataType tableName="data_item" columnName="value" newDataType="VARCHAR(500)"/>
+        <modifyDataType tableName="multiple_lang" columnName="value" newDataType="VARCHAR(500)"/>
+    </changeSet>
+</databaseChangeLog>

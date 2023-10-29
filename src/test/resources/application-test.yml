@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: <service_name>
+  mvc:
+    throw-exception-if-no-handler-found: false
+  resources:
+    add-mappings: true
+
+logging:
+  path: logs/
+  file: <service_name>.log
+  level:
+    root: INFO
+  accesslog:
+    pattern: '%h %l %u [%t] "%r" %s %b "Referer: %i{Referer}" "X-Forwarded-For: %i{X-Forwarded-For}" "User-Agent: %i{User-Agent}"'
+
+api:
+  paths: /<service_context>/**
+
+jwt:
+  wso2:
+    secret: ${JWT_SECRET:11122233325252525252}
+    issuer: ${JWT_ISSUER:wso2.org/products/am}
+  internal:
+    secret: ${INTERNAL_JWT_SECRET:11122233325252525252}
+    issuer: ${INTERNAL_JWT_ISSUER:101D}
+    expiry: 1
